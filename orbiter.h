@@ -101,7 +101,7 @@ void orbiter :: setOrbitNature( char nat )
 	orbitNature = nat;
 }
 
-orbiter :: setOrbitRadius( float rad )
+void orbiter :: setOrbitRadius( float rad )
 {
 	orbitRadius = rad;
 }
@@ -177,7 +177,7 @@ float orbiter :: getVelocity( char typ )
 		return -1;
 }
 
-char orbiter :: isObserver( )
+char orbiter :: ifObserver( )
 {
 	return observer;
 }
