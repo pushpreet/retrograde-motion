@@ -19,7 +19,7 @@
 class orbiter
 {
 	private:
-		float initialPosition;							// initial position of the orbiter in degree
+		float initialPos;								// initial position of the orbiter in degree
 		float currentPosQ;								// current position of the orbiter in degree
 		float currentPosx;								// current x co-ordinate of the orbiter
 		float currentPosy;								// current y co-ordinate of the orbiter
@@ -52,4 +52,142 @@ class orbiter
 		
 		// Constructor(s)
 		orbiter( );
+};
+
+/*
+	Changelog:
+	
+	18/09/2013
+		- added implementation for constructor
+		- added implementation for all write methods
+		- added implementation for all read methods
+	
+*/
+
+
+// implemetation of constructor for class orbiter
+orbiter :: orbiter( )
+{
+	initialPos		 	= 0.0;
+	currentPosQ 		= 0.0;
+	currentPosx 		= 0.0;
+	currentPosy 		= 0.0;
+	orbitRadius 		= 0.0;
+	angularVelocity 	= 0.0;
+	linearVelocity 		= 0.0;
+	observer  			= 'n';
+	orbitNature 		= 'y';
+	revolutionDirection = 'y';
+	
+}
+
+/*
+	*********************************
+	  Definition of write methods
+	*********************************
+*/
+
+// sets initialPos, currentPosQ, currentPosx and currentPosy according to parameter pos
+void orbiter :: setInitialPosition( float pos )
+{
+	initialPos = pos;
+	currentPosQ = pos;
+	currentPosx = orbitRadius * cos( pos );				// x = rcosQ for uniform circular motion
+	currentPosy = orbitRadius * sin( pos );				// y = rsinQ for uniform circular motion
+}
+
+void orbiter :: setOrbitNature( char nat )
+{
+	orbitNature = nat;
+}
+
+orbiter :: setOrbitRadius( float rad )
+{
+	orbitRadius = rad;
+}
+
+// sets both linear and angular velocity according to the one provded
+void orbiter :: setVelocity( float vel, char typ )
+{
+	if( typ == 'a' )									// if input vel is angular velocity
+	{
+		angularVelocity = vel;
+		linearVelocity = vel * orbitRadius;
+	}
+	
+	else if( typ == 'l' )
+	{
+		linearVelocity = vel;
+		angularVelocity = vel / orbitRadius;
+	}
+}
+
+void orbiter :: setObserver( char obs )
+{
+	observer = obs;
+}
+
+void orbiter :: setRevolutionDirection( char dir )
+{
+	revolutionDirection = dir;
+}
+
+
+/*
+	*********************************
+	  Definition of read methods
+	*********************************
+*/
+
+float orbiter :: getInitialPosition( )
+{
+	return initialPos;
+}
+
+float orbiter :: getCurrentPosition( )
+{
+	return currentPosQ;
+}
+
+float orbiter :: getPosx( )
+{
+	return currentPosx;
+}
+
+float orbiter :: getPosy( )
+{
+	return currentPosy;
+}
+
+float orbiter :: getOrbitRadius( )
+{
+	return orbitRadius;
+}
+
+// returns angular velocity if typ is 'a', linear velocity if typ is 'l'
+float orbiter :: getVelocity( char typ )
+{
+	if( typ == 'a' )
+		return angularVelocity;
+		
+	else if( typ == 'l' )
+		return linearVelocity;
+	
+	else
+		return -1;
+}
+
+char orbiter :: isObserver( )
+{
+	return observer;
+}
+
+char orbiter :: getOrbitNature( )
+{
+	return orbitNature;
+}
+
+char orbiter :: getRevolutionDirection( )
+{
+	return revolutionDirection;
 }
