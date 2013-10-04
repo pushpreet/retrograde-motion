@@ -1,4 +1,14 @@
 #include <math.h>
+#include <iostream>
+#include <conio.h>
+
+using namespace std;
+
+struct cartesian                                // structure to hold position as cartesian co-ordinates
+{
+       float x;                                 // x-co-ordinate
+       float y;                                 // y-co-ordinate
+};
 
 /*
 	ID Description: 		Implementation of class orbiter
@@ -9,7 +19,9 @@
 							- read methods for all the properties
 							- all read and write methods input and work on SI units
 	
-	Modification Historty:  NULL
+	Modification Historty:  01/10/2013
+                              - 14:33 added the currentPosition variables in a structure so that a function can return both variables at once
+
 	
 	Dependencies:			Depends On: math.h
 							Used In: 	NULL
@@ -19,14 +31,9 @@
 class orbiter
 {
 	private:
-		struct cartPos                                  // position as cartesian co-ordinates
-		{
-               float x;                                 // x-co-ordinate
-               float y;                                 // y-co-ordinate
-        }
-   		cartPos currentPos;								// current x and y co-ordinate of the orbiter
+   		cartesian currentPos;							// current x and y co-ordinate of the orbiter
         float initialPos;								// initial position of the orbiter in degree
-		float currentPos;								// current position of the orbiter in degree
+		float currentPosQ;								// current position of the orbiter in degree
 		float orbitRadius;								// radius of the orbit
 		float angularVelocity;							// angular velocity of the orbiter
 		float linearVelocity;							// linear velocity of the orbiter
@@ -44,14 +51,13 @@ class orbiter
 		void setRevolutionDirection( char dir );		// sets to 'y' or 'n' according to parameter dir
 		
 		// Read methods
-		cartPos getPos( );								// returns Posx
-		float getInitialPosition( );					// returns initial position in degree
+		cartesian getPos( );							// returns Posx
 		float getCurrentPosition( );					// returns current position in degree
-		float getOrbitRadius( );						// returns orbit radius
-		float getVelocity( char typ );					// returns angular velocity or linear velocity if typ is 'a' or 'l' respectively 
 		char  ifObserver( );							// returns 'y' if observer, otherwise 'n'
-		char  getOrbitNature( );						// returns 'y' if circular, 'n' if elliptical
-		char  getRevolutionDirection( );				// returns 'y' if clockwise, 'n' if counter-clockwise
+		
+		// Calculative methods
+		cartesian jumpPosition( float jumpTime );
+		cartesian calcPosition( float time );
 		
 		// Constructor(s)
 		orbiter( );
@@ -61,9 +67,14 @@ class orbiter
 	Changelog:
 	
 	18/09/2013
-		- added implementation for constructor
-		- added implementation for all write methods
-		- added implementation for all read methods
+		- --:-- added implementation for constructor
+		- --:-- added implementation for all write methods
+		- --:-- added implementation for all read methods
+	01/10/2013
+        - 15:10 added the currentPosition variables in a structure so that a function can return both variables at once
+        - 15:11 removed un-neccesary read methods
+
+
 	
 */
 
@@ -72,7 +83,7 @@ class orbiter
 orbiter :: orbiter( )
 {
 	initialPos		 	= 0.0;
-	currentPos     		= 0.0;
+	currentPosQ    		= 0.0;
 	currentPos.x 		= 0.0;
 	currentPos.y		= 0.0;
 	orbitRadius 		= 0.0;
@@ -94,7 +105,7 @@ orbiter :: orbiter( )
 void orbiter :: setInitialPosition( float pos )
 {
 	initialPos = pos;
-	currentPos = pos;
+	currentPosQ = pos;
 	currentPos.x = orbitRadius * cos( pos );				// x = rcosQ for uniform circular motion
 	currentPos.y = orbitRadius * sin( pos );				// y = rsinQ for uniform circular motion
 }
@@ -142,37 +153,14 @@ void orbiter :: setRevolutionDirection( char dir )
 	*********************************
 */
 
-cartPos orbiter :: getPos( )
+cartesian orbiter :: getPos( )
 {
 	return currentPos;
-}
-
-float orbiter :: getInitialPosition( )
-{
-	return initialPos;
 }
 
 float orbiter :: getCurrentPosition( )
 {
-	return currentPos;
-}
-
-float orbiter :: getOrbitRadius( )
-{
-	return orbitRadius;
-}
-
-// returns angular velocity if typ is 'a', linear velocity if typ is 'l'
-float orbiter :: getVelocity( char typ )
-{
-	if( typ == 'a' )
-		return angularVelocity;
-		
-	else if( typ == 'l' )
-		return linearVelocity;
-	
-	else
-		return -1;
+	return currentPosQ;
 }
 
 char orbiter :: ifObserver( )
@@ -180,12 +168,23 @@ char orbiter :: ifObserver( )
 	return observer;
 }
 
-char orbiter :: getOrbitNature( )
+/*
+	*********************************
+    Definition of calculative methods
+	*********************************
+*/
+
+cartesian jumpPosition( float jumpTime )
 {
-	return orbitNature;
+    currentPos.x = orbitRadius * cos( currentPosQ + ( angularVelocity * jumpTime) );				// x = rcosQ for uniform circular motion
+	currentPos.y = orbitRadius * sin( currentPosQ + ( angularVelocity * jumpTime) );				// y = rsinQ for uniform circular motion
 }
 
-char orbiter :: getRevolutionDirection( )
+cartesian calcPosition( float time );
+		
+int main( )
 {
-	return revolutionDirection;
+    orbiter orb;
+    cout<<orb.getPos().x;
+    getch();
 }
