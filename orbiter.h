@@ -19,10 +19,14 @@
 class orbiter
 {
 	private:
-		float initialPos;								// initial position of the orbiter in degree
-		float currentPosQ;								// current position of the orbiter in degree
-		float currentPosx;								// current x co-ordinate of the orbiter
-		float currentPosy;								// current y co-ordinate of the orbiter
+		struct cartPos                                  // position as cartesian co-ordinates
+		{
+               float x;                                 // x-co-ordinate
+               float y;                                 // y-co-ordinate
+        }
+   		cartPos currentPos;								// current x and y co-ordinate of the orbiter
+        float initialPos;								// initial position of the orbiter in degree
+		float currentPos;								// current position of the orbiter in degree
 		float orbitRadius;								// radius of the orbit
 		float angularVelocity;							// angular velocity of the orbiter
 		float linearVelocity;							// linear velocity of the orbiter
@@ -40,10 +44,9 @@ class orbiter
 		void setRevolutionDirection( char dir );		// sets to 'y' or 'n' according to parameter dir
 		
 		// Read methods
+		cartPos getPos( );								// returns Posx
 		float getInitialPosition( );					// returns initial position in degree
 		float getCurrentPosition( );					// returns current position in degree
-		float getPosx( );								// returns Posx
-		float getPosy( );								// returns Posy
 		float getOrbitRadius( );						// returns orbit radius
 		float getVelocity( char typ );					// returns angular velocity or linear velocity if typ is 'a' or 'l' respectively 
 		char  ifObserver( );							// returns 'y' if observer, otherwise 'n'
@@ -69,9 +72,9 @@ class orbiter
 orbiter :: orbiter( )
 {
 	initialPos		 	= 0.0;
-	currentPosQ 		= 0.0;
-	currentPosx 		= 0.0;
-	currentPosy 		= 0.0;
+	currentPos     		= 0.0;
+	currentPos.x 		= 0.0;
+	currentPos.y		= 0.0;
 	orbitRadius 		= 0.0;
 	angularVelocity 	= 0.0;
 	linearVelocity 		= 0.0;
@@ -91,9 +94,9 @@ orbiter :: orbiter( )
 void orbiter :: setInitialPosition( float pos )
 {
 	initialPos = pos;
-	currentPosQ = pos;
-	currentPosx = orbitRadius * cos( pos );				// x = rcosQ for uniform circular motion
-	currentPosy = orbitRadius * sin( pos );				// y = rsinQ for uniform circular motion
+	currentPos = pos;
+	currentPos.x = orbitRadius * cos( pos );				// x = rcosQ for uniform circular motion
+	currentPos.y = orbitRadius * sin( pos );				// y = rsinQ for uniform circular motion
 }
 
 void orbiter :: setOrbitNature( char nat )
@@ -139,6 +142,11 @@ void orbiter :: setRevolutionDirection( char dir )
 	*********************************
 */
 
+cartPos orbiter :: getPos( )
+{
+	return currentPos;
+}
+
 float orbiter :: getInitialPosition( )
 {
 	return initialPos;
@@ -146,17 +154,7 @@ float orbiter :: getInitialPosition( )
 
 float orbiter :: getCurrentPosition( )
 {
-	return currentPosQ;
-}
-
-float orbiter :: getPosx( )
-{
-	return currentPosx;
-}
-
-float orbiter :: getPosy( )
-{
-	return currentPosy;
+	return currentPos;
 }
 
 float orbiter :: getOrbitRadius( )
