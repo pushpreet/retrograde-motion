@@ -57,7 +57,7 @@ class orbiter
 		double getCurrentPosition( );					// returns current position in degree
 		char ifObserver( );							// returns 'y' if observer, otherwise 'n'
 		
-		// Calculative methods
+		// Other methods
 		cartesian calcPosition( double time );
 		
 		// Constructor(s)
@@ -95,7 +95,6 @@ orbiter :: orbiter( )
 	observer  			= 'n';
 	orbitNature 		= 'y';
 	revolutionDirection = 'y';
-	
 }
 
 /*
@@ -174,7 +173,7 @@ char orbiter :: ifObserver( )
 
 /*
 	*********************************
-    Definition of calculative methods
+      Definition of other methods
 	*********************************
 */
 
