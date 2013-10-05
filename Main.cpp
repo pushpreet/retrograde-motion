@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <dos.h>
 #include "orbiter.h"
+#include "line.h"
 
 using namespace std;
 

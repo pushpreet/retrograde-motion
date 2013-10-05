@@ -1,12 +1,7 @@
 #include <math.h>
+#include "cartesian.h"
 
 #define PI 3.14159265
-
-struct cartesian                                // structure to hold position as cartesian co-ordinates
-{
-       double x;                                 // x-co-ordinate
-       double y;                                 // y-co-ordinate
-};
 
 /*
 	ID Description: 		Implementation of class orbiter

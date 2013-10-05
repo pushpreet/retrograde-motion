@@ -1,8 +1,4 @@
-struct cartesian                                // structure to hold position as cartesian co-ordinates
-{
-       double x;                                 // x-co-ordinate
-       double y;                                 // y-co-ordinate
-};
+#include "cartesian.h"
 
 /*
 	ID Description: 		Implementation of class line
@@ -10,7 +6,9 @@ struct cartesian                                // structure to hold position as
 	
 	Version:				- 1.0.0
 
-	Features:				- 
+	Features:				- stores the line in the form of y = mx + c, where m is the slope and c is the y-intercept
+							- includes method(s) to form a line through two point form
+							- includes method(s) to calculate the point of intersection of two lines
 	
 	Modification Historty:  NULL
 	
