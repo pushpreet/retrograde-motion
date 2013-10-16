@@ -24,6 +24,14 @@ void runExperiment( orbiter* orbiterPointer, int noOfOrbiters, double timePeriod
 
 using namespace std;
 
+void gotoxy( int x, int y )			// function to place the cursor at a position on the console specified by x and y
+{
+	COORD coord;					// structure COORD is present in windows.h
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition( GetStdHandle( STD_OUTPUT_HANDLE ), coord );		// windows.h funtion to change the position of the cursor
+}
+
 void hideCursor( )					// hides the cursor
 {
    HANDLE consoleHandle = GetStdHandle( STD_OUTPUT_HANDLE );
@@ -56,14 +64,6 @@ void _setConsole( )				// sets the basic attributes of the console window
 	
 	system( "color 0C" );										// set the default screen background and text color
 	system( "cls" );											// clear screen
-}
-
-void gotoxy( int x, int y )			// function to place the cursor at a position on the console specified by x and y
-{
-	COORD coord;					// structure COORD is present in windows.h
-	coord.X = x;
-	coord.Y = y;
-	SetConsoleCursorPosition( GetStdHandle( STD_OUTPUT_HANDLE ), coord );		// windows.h funtion to change the position of the cursor
 }
 
 void _setColor( short int colorScheme )			// changes the text and background color according to colorScheme
@@ -459,7 +459,7 @@ void _screen_new_exp( )										// function to setup a new experiment
 	_screen_exp_var( orbiterPointer, noOfOrbiters );
 }
 
-void _screen_exp_var( orbiter* orbiterPointer, int noOfOrbiters )
+void _screen_exp_var( orbiter* orbiterPointer, int noOfOrbiters )		// function to input experiment variables
 {
 	_paintScreen( );										// repaint the screen to remove any earlier text
 	CURRENT_SCREEN = SCREEN_EXP_VAR;						// changes the global variable
@@ -592,7 +592,8 @@ void _screen_exp_var( orbiter* orbiterPointer, int noOfOrbiters )
 		runExperiment( orbiterPointer, noOfOrbiters, timePeriod, timeInterval );		// call the runExperiment funtion with values of all the objects
 	}
 }
-int _control_loop(  )
+
+int _control_loop( )				// function with the main loop which is responsible for managing the flow of control
 {
 	_menu( );
 	
@@ -639,7 +640,7 @@ void _interface( )
 	
 };
 
-void runExperiment( orbiter* orbiterPointer, int noOfOrbiters, double timePeriod, double timeInterval )
+void runExperiment( orbiter* orbiterPointer, int noOfOrbiters, double timePeriod, double timeInterval )				// runs the experiment
 {
 	int observer;
 	
@@ -656,7 +657,47 @@ void runExperiment( orbiter* orbiterPointer, int noOfOrbiters, double timePeriod
 	{
 		if( i != observer )
 		{
-			//calculateTime( )
+			calculateTime( ( orbiterPointer + observer ), ( orbiterPointer + i ), timePeriod, timeInterval );
+		}
+	}
+}
+
+void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod, double timeInterval )
+{
+	cartesian pointOne, pointTwo, intersection;
+	line reference( 0, 100 );
+	line passing;
+	double lastIntercept = 0.0;
+	char newDirection, lastDirection = 'x';
+	
+	for( double time = 0 ; time < timePeriod ; time += timeInterval )
+	{
+		pointOne = orbiterOne->calcPosition( time );
+		pointTwo = orbiterTwo->calcPosition( time );
+		
+		passing.twoPointForm( pointOne, pointTwo );
+		
+		intersection = reference.getIntersection( passing );
+		
+		if( intersection.x > lastIntercept )
+		{
+			newDirection = 'p';
+		}
+		
+		else if( intersection.x < lastIntercept )
+		{
+			newDirection = 'n';
+		}
+		
+		if( lastDirection == 'x' )
+		{
+			lastDirection = newDirection;
+		}
+		
+		else if( newDirection != lastDirection)
+		{
+			// record time
+			lastDirection = newDirection;
 		}
 	}
 }
