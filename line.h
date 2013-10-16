@@ -4,7 +4,7 @@
 	ID Description: 		Implementation of class line
 							Written by Pushpreet on 05/10/2013
 	
-	Version:				- 1.0.0
+	Version:				- 1.0.1
 
 	Features:				- stores the line in the form of y = mx + c, where m is the slope and c is the y-intercept
 							- includes method(s) to form a line through two point form
@@ -12,8 +12,8 @@
 	
 	Modification Historty:  NULL
 	
-	Dependencies:			Depends On: math.h
-							Used In: 	NULL
+	Dependencies:			Depends On: cartesian.h
+							Used In: 	Project: Retrograde Motion - Main.cpp
 
 */
 
@@ -33,11 +33,13 @@ class line
 		double getIntercept( );						// returns the y-interxcept of the line
 
 		// Other methods
-		line twoPointForm( double x1, double x2, double y1, double y2 );
-		cartesian getIntersection( line lineOne, line lineTwo );
+		line twoPointForm( double x1, double x2, double y1, double y2 );		// takes two points (four doubles) and returns a line passing through those points
+		line twoPointForm( cartesian pointOne, cartesian pointTwo );			// takes two cartesians and returns a line passing through them
+		cartesian getIntersection( line Line );									// finds the point of intersection between the calling line and the line passed through the parameter and then returns it
 
 		// Constructors(s)
 		line( );
+		line( double _slope, double _yIntercept );
 };
 
 /*
@@ -45,6 +47,9 @@ class line
 	
 	06/10/2013
 		- 01:16 added implementation for all the methods
+	16-10-13 
+		- 11:25 removed bugs from twoPointForm method
+		- 11:33 added an overloaded form of twoPointForm method
 	
 */
 
@@ -55,20 +60,26 @@ line :: line( )
 	yIntercept = 0.0;
 }
 
+line :: line( double _slope, double _yIntercept )
+{
+	slope = _slope;
+	yIntercept = _yIntercept;
+}
+
 /*
 	*********************************
 	   Definition of write methods
 	*********************************
 */
 
-void line :: setSlope( double slp )
+void line :: setSlope( double _slope )
 {
-	slope = slp;
+	slope = _slope;
 }
 
-void line :: setIntercept( double intercept )
+void line :: setIntercept( double _yIntercept )
 {
-	yIntercept = intercept;
+	yIntercept = _yIntercept;
 }
 
 /*
@@ -93,7 +104,7 @@ double line :: getIntercept( )
 	*********************************
 */
 
-line line :: twoPointForm( double x1, double x2, double y1, double y2)					// takes two points and returns a line passing through those points
+line line :: twoPointForm( double x1, double y1, double x2, double y2 )					// takes two points and returns a line passing through those points
 {
 	slope = ( y2 - y1 ) / ( x2 - x1 );													// m = ( y2 - y1 ) / ( x2 - x1 )
 	yIntercept = y1 - ( x1 * slope );													// c = y1 - ( m * x1 )
@@ -101,12 +112,20 @@ line line :: twoPointForm( double x1, double x2, double y1, double y2)					// ta
 	return *this;
 }
 
-cartesian line :: getIntersection( line lineOne, line lineTwo )							// takes two lines and returns their point of intersection
+line line :: twoPointForm( cartesian pointOne, cartesian pointTwo )						// takes two points and returns a line passing through those points
 {
-	cartesian point;																										// if the lines are y = ax + c
-																															// and y = bx + d, then
-	point.x = ( lineTwo.getIntercept( ) - lineOne.getIntercept( ) ) / ( lineOne.getSlope( ) - lineTwo.getSlope( ) );		// x = ( d - c ) / ( a - d )
-	point.y = ( lineOne.getSlope( ) * point.x ) + lineOne.getIntercept( );													// y = a * ( d - c ) / ( a - d ) + c
+	slope = ( pointTwo.y - pointOne.y ) / ( pointTwo.x - pointOne.x );					// m = ( y2 - y1 ) / ( x2 - x1 )
+	yIntercept = pointOne.y - ( pointOne.x * slope );									// c = y1 - ( m * x1 )
+	
+	return *this;
+}
+
+cartesian line :: getIntersection( line Line )											// takes two lines and returns their point of intersection
+{
+	cartesian point;																	// if the lines are y = ax + c
+																						// and y = bx + d, then
+	point.x = ( Line.getIntercept( ) - yIntercept ) / ( slope - Line.getSlope( ) );		// x = ( d - c ) / ( a - d )
+	point.y = ( slope * point.x ) + yIntercept;											// y = a * ( d - c ) / ( a - d ) + c
 
 	return point;
 }

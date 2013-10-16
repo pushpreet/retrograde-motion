@@ -13,6 +13,7 @@
 							- stores both angular and linear velocity from one input through necessary conversions
 							- read methods for all the properties
 							- all read and write methods input and work on SI units
+							- implementation for elliptical orbits hasn't been added yet
 	
 	Modification Historty:  01/10/2013
 								- 14:33 added the currentPosition variables in a structure so that a function can return both variables at once
@@ -21,6 +22,7 @@
 								- 20:05 changed all float variables / methods to double
 	
 	Dependencies:			Depends On: math.h
+										cartesian.h
 							Used In: 	Project: Retrograde Motion - Main.cpp
 
 */
@@ -35,13 +37,13 @@ class orbiter
 		double angularVelocity;							// angular velocity of the orbiter
 		double linearVelocity;							// linear velocity of the orbiter
 		char observer;									// 'y' if observer, otherwise 'n'
-		char orbitNature;								// 'y' if circular, 'n' if elliptical
+		char orbitNature;								// ** NOT IMPLEMENTED ** 'y' if circular, 'n' if elliptical
 		char revolutionDirection;						// 'y' if clockwise, 'n' if counter-clockwise
 	
 	public:
 		// Write methods
 		void setInitialPosition( double pos );			// sets initial position of the orbiter according to parameter pos in degree
-		void setOrbitNature( char nat );				// sets nature to 'y' or 'n' if parameter nat is 'y' or 'n' respectively
+		void setOrbitNature( char nat );				// ** NOT IMPLEMENTED ** sets nature to 'y' or 'n' if parameter nat is 'y' or 'n' respectively
 		void setOrbitRadius( double rad );				// sets radius of orbit in metres according to parameter rad
 		void setVelocity( double vel, char typ );		// sets both angular and linear velocity of the orbiter according to parameter val, val is angular if typ is 'a' and linear if typ is 'l'
 		void setObserver( char obs );					// sets to 'y' or 'n' according to parameter obs
@@ -50,7 +52,7 @@ class orbiter
 		// Read methods
 		cartesian getPos( );							// returns Posx
 		double getCurrentPosition( );					// returns current position in degree
-		char ifObserver( );							// returns 'y' if observer, otherwise 'n'
+		char ifObserver( );								// returns 'y' if observer, otherwise 'n'
 		
 		// Other methods
 		cartesian calcPosition( double time );
@@ -108,7 +110,7 @@ void orbiter :: setInitialPosition( double pos )
 	currentPos.y = orbitRadius * sin( pos );				// y = rsinQ for uniform circular motion
 }
 
-void orbiter :: setOrbitNature( char nat )
+void orbiter :: setOrbitNature( char nat )					// ** NOT IMPLEMENTED **
 {
 	orbitNature = nat;
 }
