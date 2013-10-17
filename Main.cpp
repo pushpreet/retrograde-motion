@@ -32,15 +32,20 @@
 #include "line.h"
 
 // mapping for various screens
-#define SCREEN_WELCOME	0
-#define SCREEN_NEW_EXP	1
-#define SCREEN_EXP_VAR	2
-#define SCREEN_HISTORY	3
-#define SCREEN_HELP		4
+#define SCREEN_WELCOME		0
+#define SCREEN_NEW_EXP		1
+#define SCREEN_EXP_VAR		2
+#define SCREEN_RUN_EXP		3
+#define SCREEN_CALC_TIME	4
 
-// mapping for Tab and Enter key presses
-#define TAB 9
-#define CR 13
+// mapping for various key presses
+#define TAB 	9
+#define CR 		13
+#define NEW		14
+#define SAVE 	19
+#define HISTORY	22
+#define YES		121
+#define NO		110
 
 // global variables
 short int CURRENT_SCREEN = 0;		// global variable to keep track of current screen
@@ -49,7 +54,7 @@ COORD screenSize;					// global variable as screenSize is needed by many functio
 // function prototypes
 int _control_loop( );																							// function with the main loop which is responsible for managing the flow of control
 void _screen_exp_var( orbiter* orbiterPointer, int noOfOrbiters );												// function to input experiment variables
-void runExperiment( orbiter* orbiterPointer, int noOfOrbiters, double timePeriod, double timeInterval );		// funtion to run the experiment according to the values of orbiters provided
+void _screen_run_exp( orbiter* orbiterPointer, int noOfOrbiters, double timePeriod, double timeInterval );		// funtion to run the experiment according to the values of orbiters provided
 void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod, double timeInterval );
 
 using namespace std;
@@ -213,8 +218,8 @@ void _menu(  )												// top menu
 			cout<<"Save Experiment";
 			
 			_setColor( 3 );
-			gotoxy( 6 + ( menuWordSpace * 2 ) + ( halfSpace - 3 ), 5 );
-			cout<<"History";
+			gotoxy( 6 + ( menuWordSpace * 2 ) + ( halfSpace - 6 ), 5 );
+			cout<<"View History";
 			
 			gotoxy( 6 + ( menuWordSpace * 3 ) + ( halfSpace - 2 ), 5 );
 			cout<<"Help";
@@ -227,18 +232,20 @@ void _menu(  )												// top menu
 			
 			break;
 		
-		case SCREEN_NEW_EXP:								// New Experiment Screen / All options available
+		case SCREEN_NEW_EXP:								// New Experiment Screen / Save Experiment not available
 			
 			_setColor( 3 );
 			
 			gotoxy( 6 + ( menuWordSpace * 0 ) + ( halfSpace - 7 ), 5 );
 			cout<<"New Experiment";
 			
+			_setColor( 2 );
 			gotoxy( 6 + ( menuWordSpace * 1 ) + ( halfSpace - 7 ), 5 );
 			cout<<"Save Experiment";
 			
-			gotoxy( 6 + ( menuWordSpace * 2 ) + ( halfSpace - 3 ), 5 );
-			cout<<"History";
+			_setColor( 3 );
+			gotoxy( 6 + ( menuWordSpace * 2 ) + ( halfSpace - 6 ), 5 );
+			cout<<"View History";
 			
 			gotoxy( 6 + ( menuWordSpace * 3 ) + ( halfSpace - 2 ), 5 );
 			cout<<"Help";
@@ -251,7 +258,33 @@ void _menu(  )												// top menu
 			
 			break;
 		
-		case SCREEN_EXP_VAR:								// Experiment Variables / All options available
+		case SCREEN_EXP_VAR:								// Experiment Variables / Save Experiment not available
+			
+			_setColor( 3 );
+			
+			gotoxy( 6 + ( menuWordSpace * 0 ) + ( halfSpace - 7 ), 5 );
+			cout<<"New Experiment";
+			
+			_setColor( 2 );
+			gotoxy( 6 + ( menuWordSpace * 1 ) + ( halfSpace - 7 ), 5 );
+			cout<<"Save Experiment";
+			
+			_setColor( 3 );
+			gotoxy( 6 + ( menuWordSpace * 2 ) + ( halfSpace - 6 ), 5 );
+			cout<<"View History";
+			
+			gotoxy( 6 + ( menuWordSpace * 3 ) + ( halfSpace - 2 ), 5 );
+			cout<<"Help";
+			
+			gotoxy( 6 + ( menuWordSpace * 4 ) + ( halfSpace - 2 ), 5 );
+			cout<<"About";
+			
+			gotoxy( 6 + ( menuWordSpace * 5 ) + ( halfSpace - 2 ), 5 );
+			cout<<"Exit";
+			
+			break;
+			
+		case SCREEN_RUN_EXP:								// Run Experiment / All oprions available available
 			
 			_setColor( 3 );
 			
@@ -261,14 +294,40 @@ void _menu(  )												// top menu
 			gotoxy( 6 + ( menuWordSpace * 1 ) + ( halfSpace - 7 ), 5 );
 			cout<<"Save Experiment";
 			
-			gotoxy( 6 + ( menuWordSpace * 2 ) + ( halfSpace - 3 ), 5 );
-			cout<<"History";
+			gotoxy( 6 + ( menuWordSpace * 2 ) + ( halfSpace - 6 ), 5 );
+			cout<<"View History";
 			
 			gotoxy( 6 + ( menuWordSpace * 3 ) + ( halfSpace - 2 ), 5 );
 			cout<<"Help";
 			
 			gotoxy( 6 + ( menuWordSpace * 4 ) + ( halfSpace - 2 ), 5 );
 			cout<<"About";
+			
+			gotoxy( 6 + ( menuWordSpace * 5 ) + ( halfSpace - 2 ), 5 );
+			cout<<"Exit";
+			
+			break;
+		
+		case SCREEN_CALC_TIME:								// Run Experiment / All oprions available available
+			
+			_setColor( 2 );
+			
+			gotoxy( 6 + ( menuWordSpace * 0 ) + ( halfSpace - 7 ), 5 );
+			cout<<"New Experiment";
+			
+			gotoxy( 6 + ( menuWordSpace * 1 ) + ( halfSpace - 7 ), 5 );
+			cout<<"Save Experiment";
+			
+			gotoxy( 6 + ( menuWordSpace * 2 ) + ( halfSpace - 6 ), 5 );
+			cout<<"View History";
+			
+			gotoxy( 6 + ( menuWordSpace * 3 ) + ( halfSpace - 2 ), 5 );
+			cout<<"Help";
+			
+			gotoxy( 6 + ( menuWordSpace * 4 ) + ( halfSpace - 2 ), 5 );
+			cout<<"About";
+			
+			_setColor( 3 );
 			
 			gotoxy( 6 + ( menuWordSpace * 5 ) + ( halfSpace - 2 ), 5 );
 			cout<<"Exit";
@@ -624,23 +683,62 @@ void _screen_exp_var( orbiter* orbiterPointer, int noOfOrbiters )		// function t
 		
 	} while( done != 1 );		// run the loop till values for all the objects have been entered
 	
-	_paintScreen( );										// repaint the screen to remove any earlier text
-	_menu( );												// reprint the menu
+	_screen_run_exp( orbiterPointer, noOfOrbiters, timePeriod, timeInterval );		// call the _screen_run_exp funtion with values of all the objects
+		
+}
+
+void _screen_save_exp( orbiter* orbiterPointer, int noOfOrbiters, double timePeriod, double timeInterval )
+{
+	ofstream fileOut;
+	fileOut.open( "saved_experiments.txt" , ios :: out | ios :: app );
+	
+	fileOut<<endl
+			<<"\t"<<"****************************************************************************************************************************************************************"
+			<<endl
+			<<"\t"<<"****************************************************************************************************************************************************************"
+			<<endl<<endl;
+	
+	fileOut<<"\t"<<currentDateTime( )
+			<<endl<<endl;
+	
+	fileOut<<"\t"<<"----------------------------------------------------------------------------------------------------------------------------------------------------------------"
+			<<endl;
+			
+	fileOut<<"\t"<<setw( 25 )<<" "
+			<<setw( 25 )<<"Initial Position"
+			<<setw( 25 )<<"Orbit Radius"
+			<<setw( 25 )<<"Angular Velocity"
+			<<setw( 25 )<<"Revolution Direction"
+			<<setw( 25 )<<"Observer"
+			<<endl<<endl;
+	
+	fileOut<<"\t"<<"----------------------------------------------------------------------------------------------------------------------------------------------------------------"
+			<<endl;
+	
+	for( int i = 0 ; i < noOfOrbiters ; i++ )
+	{
+		fileOut<<"\t"<<"Orbiter "<<setw( 17 )<<( i + 1 )
+				<<setw( 25 )<<( orbiterPointer + i )->getInitialPosition( )
+				<<setw( 25 )<<( orbiterPointer + i )->getOrbitRadius( )
+				<<setw( 25 )<<( orbiterPointer + i )->getVelocity( 'a' )
+				<<setw( 25 )<<((( orbiterPointer + i )->getRevolutionDirection( ) == 'y' ) ? "Clockwise" : "Anti-Clockwise" )
+				<<setw( 25 )<<((( orbiterPointer + i )->ifObserver( ) == 'y' ) ? "Yes" : "No" )
+				<<endl;				
+	}
+	
+	fileOut<<endl<<"\t"
+			<<setw( 25 )<<"Time Period : "<<timePeriod
+			<<setw( 25 )<<"Time Interval : "<<timeInterval
+			<<endl;
+			
+	fileOut<<"\t"<<"----------------------------------------------------------------------------------------------------------------------------------------------------------------"
+			<<endl;
+			
+	fileOut.close( );
 	
 	_setColor( 3 );
-	gotoxy( 6 + (( horizontalSpace / 2 ) - 15 ), (( screenSize.Y - 9 ) / 2 ) );
-	cout<<"Press Enter to run experiment";
-	
-	do
-	{
-		control = _control_loop( );						// check if enter is pressed
-	
-		if( control == CR )
-		{
-			runExperiment( orbiterPointer, noOfOrbiters, timePeriod, timeInterval );		// call the runExperiment funtion with values of all the objects
-		}
-	}while( control != CR );
-	
+	gotoxy( ((( screenSize.X - 14 ) / 2 ) ), ( screenSize.Y - 19 ) );
+	cout<<"Saved";
 }
 
 int _control_loop( )				// function with the main loop which is responsible for managing the flow of control
@@ -648,6 +746,7 @@ int _control_loop( )				// function with the main loop which is responsible for 
 	_menu( );
 	
 	int keypress;
+	int choice;
 	
 	while( true )
 	{
@@ -656,8 +755,46 @@ int _control_loop( )				// function with the main loop which is responsible for 
 		
 		switch( keypress )
 		{
-			case 14:		// Ctrl + N / New Experiment				
-				_screen_new_exp( );
+			case NEW:		// Ctrl + N / New Experiment				
+				if( CURRENT_SCREEN == SCREEN_WELCOME )
+				{
+					_screen_new_exp( );
+				}
+				
+				else if( CURRENT_SCREEN == SCREEN_NEW_EXP || CURRENT_SCREEN == SCREEN_EXP_VAR || CURRENT_SCREEN == SCREEN_RUN_EXP )
+				{
+					_setColor( 3 );
+					gotoxy( ((( screenSize.X - 14 ) / 2 ) - 17 ), ( screenSize.Y - 19 ) );
+					cout<<"Discard this experiment? ( y / n )";
+					choice = _control_loop( );
+					
+					if( choice == YES )
+					{
+						_screen_new_exp( );
+					}
+					
+					else
+					{
+						_setColor( 3 );
+						gotoxy( ((( screenSize.X - 14 ) / 2 ) - 17 ), ( screenSize.Y - 19 ) );
+						cout<<"                                    ";
+						return 0;
+					}
+				}
+				
+				break;
+				
+			case SAVE:		// Ctrl + S / Save Experiment
+				if( CURRENT_SCREEN == SCREEN_RUN_EXP )
+				{
+					return SAVE;
+				}
+				
+				break;
+				
+			case HISTORY:
+				system( "start history.exe" );
+				
 				break;
 			
 			case TAB:		// Tab key
@@ -667,6 +804,22 @@ int _control_loop( )				// function with the main loop which is responsible for 
 			case CR:		// Carriage Return / Enter 
 				showCursor( );
 				return CR;
+				break;
+			
+			case 89:
+				return YES;
+				break;
+			
+			case 121:
+				return YES;
+				break;
+			
+			case 78:
+				return NO;
+				break;
+			
+			case 110:
+				return NO;
 				break;
 			
 			case 27:		// ESC key
@@ -693,30 +846,60 @@ void _interface( )
 
 };
 
-void runExperiment( orbiter* orbiterPointer, int noOfOrbiters, double timePeriod, double timeInterval )				// runs the experiment
+void _screen_run_exp( orbiter* orbiterPointer, int noOfOrbiters, double timePeriod, double timeInterval )				// runs the experiment
 {
+	_paintScreen( );										// repaint the screen to remove any earlier text	
+	CURRENT_SCREEN = SCREEN_RUN_EXP;	
+	_menu( );												// reprint the menu
+	
 	int observer;
+	int control;
+	int horizontalSpace = ( screenSize.X - ( 14 ) );		// total characters available inside the outline
 	
-	for( int i = 0 ; i < noOfOrbiters ; i++ )
-	{
-		if( ( orbiterPointer + i )->ifObserver( ) == 'y' )
-		{
-				observer = i;
-				break;
-		}
-	}
+	_setColor( 3 );
+	gotoxy( 6 + (( horizontalSpace / 2 ) - 15 ), (( screenSize.Y - 9 ) / 2 ) );
+	cout<<"Press Enter to run experiment";
 	
-	for( int i = 0 ; i < noOfOrbiters ; i++ )
+	do
 	{
-		if( i != observer )
+		control = _control_loop( );						// check if enter is pressed
+	
+		if( control == CR )
 		{
-			calculateTime( ( orbiterPointer + observer ), ( orbiterPointer + i ), timePeriod, timeInterval );
+			for( int i = 0 ; i < noOfOrbiters ; i++ )
+			{
+				if( ( orbiterPointer + i )->ifObserver( ) == 'y' )
+				{
+						observer = i;
+						break;
+				}
+			}
+	
+			for( int i = 0 ; i < noOfOrbiters ; i++ )
+			{
+				if( i != observer )
+				{
+					calculateTime( ( orbiterPointer + observer ), ( orbiterPointer + i ), timePeriod, timeInterval );
+				}
+			}
 		}
-	}
+		
+		else if( control == SAVE )
+		{
+			_screen_save_exp( orbiterPointer, noOfOrbiters, timePeriod, timeInterval );
+		}
+	}while( control != CR );
+	
 }
 
 void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod, double timeInterval )
 {
+	_paintScreen( );										// repaint the screen to remove any earlier text
+	CURRENT_SCREEN = SCREEN_CALC_TIME;
+	_menu( );												// reprint the menu
+	
+	int horizontalSpace = ( screenSize.X - ( 14 ) );
+	
 	cartesian pointOne, pointTwo, intersection;
 	line reference( 0, 100 );
 	line passing;
@@ -759,8 +942,8 @@ void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod,
 			<<endl;
 	
 	fileOut<<"\t"<<setw( 30 )<<"Revolution Direction :"
-			<<setw( 30 )<<orbiterOne->getRevolutionDirection( )
-			<<setw( 30 )<<orbiterTwo->getRevolutionDirection( )
+			<<setw( 30 )<<(( orbiterOne->getRevolutionDirection( ) == 'y' ) ? "Clockwise" : "Anti-Clockwise" )
+			<<setw( 30 )<<(( orbiterTwo->getRevolutionDirection( ) == 'y' ) ? "Clockwise" : "Anti-Clockwise" )
 			<<endl<<endl;
 	
 	fileOut<<"\t"<<"--------------------------------------------------------------------------------"
@@ -773,24 +956,26 @@ void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod,
 			
 	fileOut<<"\t"<<"--------------------------------------------------------------------------------"
 			<<endl;
-	
-	_paintScreen( );										// repaint the screen to remove any earlier text
-	_menu( );												// reprint the menu
-	
-	int horizontalSpace = ( screenSize.X - ( 14 ) );
-	
+		
 	hideCursor( );
 	_setColor( 3 );
 	gotoxy( 6 + (( horizontalSpace / 2 ) - 10 ), (( screenSize.Y - 9 ) / 2 ) );
 	cout<<"Running";
 	
-	for( double time = 0 ; time < timePeriod ; time += timeInterval )
+	time_t lastTime, newTime;						// used to display the dots while calculating
+	time( &lastTime );
+	
+	for( double timeElapsed = 0 ; timeElapsed < timePeriod ; timeElapsed += timeInterval )
 	{
 		_setColor( 3 );
 		gotoxy( 6 + (( horizontalSpace / 2 ) ), (( screenSize.Y - 9 ) / 2 ) );
 		
-		if( (int)time % 1000 )
+		time( &newTime );
+		
+		if( difftime( newTime, lastTime ) == 1 )
 		{
+			lastTime = newTime;
+			
 			if( loadDots < 5 )
 			{
 				gotoxy( 6 + (( horizontalSpace / 2 ) + loadDots ), (( screenSize.Y - 9 ) / 2 ) );
@@ -806,8 +991,8 @@ void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod,
 			}
 		}
 		
-		pointOne = orbiterOne->calcPosition( time );
-		pointTwo = orbiterTwo->calcPosition( time );
+		pointOne = orbiterOne->calcPosition( timeElapsed );
+		pointTwo = orbiterTwo->calcPosition( timeElapsed );
 		
 		passing.twoPointForm( pointOne, pointTwo );
 		
@@ -834,7 +1019,7 @@ void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod,
 		{
 			fileOut<<endl<<"\t"<<"x :"<<setw( 27 )<<pointOne.x<<"x :"<<setw( 27 )<<pointTwo.x
 					<<endl<<"\t"<<"y :"<<setw( 27 )<<pointOne.y<<"y :"<<setw( 27 )<<pointTwo.y
-					<<setw( 30 )<<time;
+					<<setw( 30 )<<timeElapsed;
 			
 			lastDirection = newDirection;
 		}
