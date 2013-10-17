@@ -1,28 +1,67 @@
+/*
+	ID Description: 		Main for project - Retrograde Motion
+							Written by Pushpreet on 05/10/2013
+	
+	Version:				- 1.0.0
+
+	Features:				- contextual help
+	
+	Modification Historty:  NULL
+	
+	Dependencies:			Depends On: orbiter.h
+										line.h
+										cartesian.h
+										iostream
+										fstream
+										conio.h
+										windows.h
+										iomanip
+										time.h
+							Used In: 	Project: Retrograde Motion - Main.cpp
+
+*/
+
 #include <iostream>
+#include <fstream>
 #include <conio.h>
 #include <windows.h>
+#include <iomanip>
+#include <time.h>
 #include "cartesian.h"
 #include "orbiter.h"
 #include "line.h"
 
-// definitions for various screens
+// mapping for various screens
 #define SCREEN_WELCOME	0
 #define SCREEN_NEW_EXP	1
 #define SCREEN_EXP_VAR	2
 #define SCREEN_HISTORY	3
 #define SCREEN_HELP		4
 
+// mapping for Tab and Enter key presses
 #define TAB 9
 #define CR 13
 
+// global variables
 short int CURRENT_SCREEN = 0;		// global variable to keep track of current screen
 COORD screenSize;					// global variable as screenSize is needed by many functions
 
-int _control_loop( );				// function with the main loop which is responsible for managing the flow of control
-void _screen_exp_var( orbiter* orbiterPointer, int noOfOrbiters );
+// function prototypes
+int _control_loop( );																							// function with the main loop which is responsible for managing the flow of control
+void _screen_exp_var( orbiter* orbiterPointer, int noOfOrbiters );												// function to input experiment variables
 void runExperiment( orbiter* orbiterPointer, int noOfOrbiters, double timePeriod, double timeInterval );		// funtion to run the experiment according to the values of orbiters provided
+void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod, double timeInterval );
 
 using namespace std;
+
+const string currentDateTime() 
+{
+    time_t rawTime;
+	time ( &rawTime );
+
+    return ctime( &rawTime );
+}
+
 
 void gotoxy( int x, int y )			// function to place the cursor at a position on the console specified by x and y
 {
@@ -261,14 +300,20 @@ void _screen_new_exp( )										// function to setup a new experiment
 	gotoxy( 6 + (( horizontalSpace / 2 ) - 23 ), 10 );
 	cout<<"Enter the number of revolving bodies you want :";
 	
-	control = _control_loop( );								// _control_loop( ) is called to see if the user wants to enter the value or otherwise
-															// the cursor becomes visible if user chose to enter the value, i.e., pressed enter
-	gotoxy( 6 + ( horizontalSpace / 2 ), 12 );
-	cin>>noOfOrbiters;
-	hideCursor( );											// hides the cursor again indicate that the input has been registered
+	do
+	{
+		control = _control_loop( );								// _control_loop( ) is called to see if the user wants to enter the value or otherwise
+																// the cursor becomes visible if user chose to enter the value, i.e., pressed enter
+		if( control == CR )
+		{
+			_setColor( 4 );
+			gotoxy( 6 + ( horizontalSpace / 2 ), 12 );
+			cin>>noOfOrbiters;
+			hideCursor( );										// hides the cursor again indicate that the input has been registered
+		}
+	}while( control != CR );
 	
 	orbiter *orbiterPointer = new orbiter[noOfOrbiters];	// dynamically allocates memory to all the orbiters
-	
 	
 	do
 	{	
@@ -541,7 +586,7 @@ void _screen_exp_var( orbiter* orbiterPointer, int noOfOrbiters )		// function t
 				{
 					_setColor( 4 );
 					gotoxy( 6 + ( wordSpace * 1 ) + ( halfSpace - 6 ), 32 );
-					cin>>timePeriod;
+					cin>>timeInterval;
 					
 					break;
 				}
@@ -585,12 +630,17 @@ void _screen_exp_var( orbiter* orbiterPointer, int noOfOrbiters )		// function t
 	_setColor( 3 );
 	gotoxy( 6 + (( horizontalSpace / 2 ) - 15 ), (( screenSize.Y - 9 ) / 2 ) );
 	cout<<"Press Enter to run experiment";
-	control = _control_loop( );						// check if enter is pressed
 	
-	if( control == CR )
+	do
 	{
-		runExperiment( orbiterPointer, noOfOrbiters, timePeriod, timeInterval );		// call the runExperiment funtion with values of all the objects
-	}
+		control = _control_loop( );						// check if enter is pressed
+	
+		if( control == CR )
+		{
+			runExperiment( orbiterPointer, noOfOrbiters, timePeriod, timeInterval );		// call the runExperiment funtion with values of all the objects
+		}
+	}while( control != CR );
+	
 }
 
 int _control_loop( )				// function with the main loop which is responsible for managing the flow of control
@@ -635,9 +685,12 @@ void _interface( )
 	gotoxy( ((( screenSize.X - 14 ) / 2 ) - 3 ), (( screenSize.Y - 9 ) / 2 ) );
 	cout<<"Retrograde Motion";
 	
-	_control_loop( );
-	
-	
+	while( true )
+	{
+		hideCursor( );
+		_control_loop( );
+	}
+
 };
 
 void runExperiment( orbiter* orbiterPointer, int noOfOrbiters, double timePeriod, double timeInterval )				// runs the experiment
@@ -669,9 +722,90 @@ void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod,
 	line passing;
 	double lastIntercept = 0.0;
 	char newDirection, lastDirection = 'x';
+	int loadDots = 0;
+	
+	ofstream fileOut;
+	fileOut.open( "Time_Log.txt" , ios :: out | ios :: app );
+	
+	fileOut.setf( ios :: left );
+	
+	fileOut<<endl
+			<<"\t"<<"********************************************************************************"
+			<<endl
+			<<"\t"<<"********************************************************************************"
+			<<endl<<endl;
+	
+	fileOut<<"\t"<<currentDateTime( )
+			<<endl<<endl;
+	
+	fileOut<<"\t"<<setw( 30 )<<" "
+			<<setw( 30 )<<"Orbiter One"
+			<<setw( 30 )<<"Orbiter Two"
+			<<endl<<endl;
+	
+	fileOut<<"\t"<<setw( 30 )<<"Initial Position :"
+			<<setw( 30 )<<orbiterOne->getInitialPosition( )
+			<<setw( 30 )<<orbiterTwo->getInitialPosition( )
+			<<endl;
+	
+	fileOut<<"\t"<<setw( 30 )<<"Orbit Radius :"
+			<<setw( 30 )<<orbiterOne->getOrbitRadius( )
+			<<setw( 30 )<<orbiterTwo->getOrbitRadius( )
+			<<endl;
+	
+	fileOut<<"\t"<<setw( 30 )<<"Angular Velocity :"
+			<<setw( 30 )<<orbiterOne->getVelocity( 'a' )
+			<<setw( 30 )<<orbiterTwo->getVelocity( 'a' )
+			<<endl;
+	
+	fileOut<<"\t"<<setw( 30 )<<"Revolution Direction :"
+			<<setw( 30 )<<orbiterOne->getRevolutionDirection( )
+			<<setw( 30 )<<orbiterTwo->getRevolutionDirection( )
+			<<endl<<endl;
+	
+	fileOut<<"\t"<<"--------------------------------------------------------------------------------"
+			<<endl;
+			
+	fileOut<<"\t"<<setw( 30 )<<"Position One"
+			<<setw( 30 )<<"Position Two"
+			<<setw( 30 )<<"Time"
+			<<endl;
+			
+	fileOut<<"\t"<<"--------------------------------------------------------------------------------"
+			<<endl;
+	
+	_paintScreen( );										// repaint the screen to remove any earlier text
+	_menu( );												// reprint the menu
+	
+	int horizontalSpace = ( screenSize.X - ( 14 ) );
+	
+	hideCursor( );
+	_setColor( 3 );
+	gotoxy( 6 + (( horizontalSpace / 2 ) - 10 ), (( screenSize.Y - 9 ) / 2 ) );
+	cout<<"Running";
 	
 	for( double time = 0 ; time < timePeriod ; time += timeInterval )
 	{
+		_setColor( 3 );
+		gotoxy( 6 + (( horizontalSpace / 2 ) ), (( screenSize.Y - 9 ) / 2 ) );
+		
+		if( (int)time % 1000 )
+		{
+			if( loadDots < 5 )
+			{
+				gotoxy( 6 + (( horizontalSpace / 2 ) + loadDots ), (( screenSize.Y - 9 ) / 2 ) );
+				cout<<".";
+				loadDots++;
+			}
+			
+			else
+			{
+				loadDots = 0;
+				gotoxy( 6 + (( horizontalSpace / 2 ) + loadDots ), (( screenSize.Y - 9 ) / 2 ) );
+				cout<<"     ";
+			}
+		}
+		
 		pointOne = orbiterOne->calcPosition( time );
 		pointTwo = orbiterTwo->calcPosition( time );
 		
@@ -682,11 +816,13 @@ void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod,
 		if( intersection.x > lastIntercept )
 		{
 			newDirection = 'p';
+			lastIntercept = intersection.x;
 		}
 		
 		else if( intersection.x < lastIntercept )
 		{
 			newDirection = 'n';
+			lastIntercept = intersection.x;
 		}
 		
 		if( lastDirection == 'x' )
@@ -694,12 +830,27 @@ void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod,
 			lastDirection = newDirection;
 		}
 		
-		else if( newDirection != lastDirection)
+		else if( newDirection != lastDirection )
 		{
-			// record time
+			fileOut<<endl<<"\t"<<"x :"<<setw( 27 )<<pointOne.x<<"x :"<<setw( 27 )<<pointTwo.x
+					<<endl<<"\t"<<"y :"<<setw( 27 )<<pointOne.y<<"y :"<<setw( 27 )<<pointTwo.y
+					<<setw( 30 )<<time;
+			
 			lastDirection = newDirection;
 		}
 	}
+	
+	_setColor( 3 );
+	gotoxy( 6 + (( horizontalSpace / 2 ) - 15 ), (( screenSize.Y - 9 ) / 2 ) );
+	cout<<"                    ";
+	
+	gotoxy( 6 + (( horizontalSpace / 2 ) - 2 ), (( screenSize.Y - 9 ) / 2 ) );
+	cout<<"Done";
+	
+	fileOut<<endl<<"\t"<<"--------------------------------------------------------------------------------"
+			<<endl;
+	
+	fileOut.close( );
 }
 
 int main( )

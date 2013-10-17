@@ -7,7 +7,7 @@
 	ID Description: 		Implementation of class orbiter
 							Written by Pushpreet on 16/09/2013
 	
-	Version:				- 1.0.3
+	Version:				- 1.0.4
 
 	Features:				- stores the position of the orbiter as an angle as well as cartesian co-ordinates
 							- stores both angular and linear velocity from one input through necessary conversions
@@ -20,6 +20,8 @@
 							05/10/2013
 								- 18:50 changed position variables to store angles in radian
 								- 20:05 changed all float variables / methods to double
+							17-10-13
+								- 19:22 added a few read methods
 	
 	Dependencies:			Depends On: math.h
 										cartesian.h
@@ -50,6 +52,10 @@ class orbiter
 		void setRevolutionDirection( char dir );		// sets to 'y' or 'n' according to parameter dir
 		
 		// Read methods
+		double getInitialPosition( );					// returns the initial position
+		double getOrbitRadius( );						// returns the radius of the orbit
+		double getVelocity( char typ );					// returns angular velocity if typ = 'a' or linear velocity if typ = 'l'
+		char getRevolutionDirection( );					// return 'y' for clockwise and 'n' for anti-clockwise
 		cartesian getPos( );							// returns Posx
 		double getCurrentPosition( );					// returns current position in degree
 		char ifObserver( );								// returns 'y' if observer, otherwise 'n'
@@ -75,7 +81,8 @@ class orbiter
 		- 18:50 changed position variables to store angles in radian
 		- 20:04 added implementation for calcPosition method
 		- 20:05 changed all float variables / methods to double
-	
+	17-10-13
+		- 19:22 added read methods to acces initial position, orbit radius, velocity and revolution direction
 */
 
 
@@ -153,6 +160,34 @@ void orbiter :: setRevolutionDirection( char dir )
 	*********************************
 */
 
+double orbiter :: getInitialPosition( )						// returns the initial position
+{
+	return initialPos;
+}
+
+double orbiter :: getOrbitRadius( )							// returns the radius of the orbit
+{
+	return orbitRadius;
+}
+
+double orbiter :: getVelocity( char typ )					// returns angular velocity if typ = 'a' or linear velocity if typ = 'l'
+{
+	if( typ == 'a' )
+	{
+		return angularVelocity;
+	}
+	
+	else if( typ == 'l' )
+	{
+		return linearVelocity;
+	}
+}
+
+char orbiter :: getRevolutionDirection( )					// return 'y' for clockwise and 'n' for anti-clockwise
+{
+	return revolutionDirection;
+}
+		
 cartesian orbiter :: getPos( )
 {
 	return currentPos;
