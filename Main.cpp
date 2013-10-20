@@ -44,6 +44,8 @@
 #define NEW		14
 #define SAVE 	19
 #define HISTORY	22
+#define HELP	8
+#define ABOUT	1
 #define YES		121
 #define NO		110
 
@@ -346,18 +348,20 @@ void _screen_new_exp( )										// function to setup a new experiment
 	
 	int noOfOrbiters = 0;									// variable to store the number of orbiters specified by the user
 	int control;											// variable to store the return value of _control_loop( )
+	int choice;												// variable to store choice in case any observer is not set
 	int highlighted = 0;									// variable to keep track of the highlighted option
 	int orbiterNumber = 0;									// variable to keep track of the current orbiter whose value is being modified
 	double input;											// variable to store the input from the keyboard as a double
 	char chInput;											// variable to store the input from the keyboard as a character
+	int observerSet = 0;									// variable to keep track if the observer is set
 		
 	int horizontalSpace = ( screenSize.X - ( 14 ) );		// total characters available inside the outline
 	int wordSpace = horizontalSpace / 7;					// space for each variable item = total space / no of variables
 	int halfSpace = wordSpace / 2;
 	
 	_setColor( 3 );											// sets the color red to indicate that the option is highlighted
-	gotoxy( 6 + (( horizontalSpace / 2 ) - 23 ), 10 );
-	cout<<"Enter the number of revolving bodies you want :";
+	gotoxy( 6 + (( horizontalSpace / 2 ) - 30 ), 10 );
+	cout<<"Enter the number of revolving bodies you want ( 2 or more ):";
 	
 	do
 	{
@@ -381,7 +385,7 @@ void _screen_new_exp( )										// function to setup a new experiment
 			case 0:							// when no option is highlighted, prints all the options and highlights the first one
 				_setColor( 2 );				// grey color for option(s) that are not highlighted
 				gotoxy( 6 + ( wordSpace * 0 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
-				cout<<"Body "<<( orbiterNumber + 1 )<<" :";
+				cout<<"Orbiter "<<( orbiterNumber + 1 )<<" :";
 				
 				_setColor( 3 );				// red color for highlighted option(s)
 				gotoxy( 6 + ( wordSpace * 1 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
@@ -397,8 +401,19 @@ void _screen_new_exp( )										// function to setup a new experiment
 				gotoxy( 6 + ( wordSpace * 4 ) + ( halfSpace - 10 ), ( 20 + ( orbiterNumber * 10)) );
 				cout<<"Revolution Direction";
 				
+				if( observerSet )
+				{
+					_setColor( 4 );
+					gotoxy( 6 + ( wordSpace * 5 ) + ( halfSpace - 8 ), ( 22 + ( orbiterNumber * 10)) );
+					cout<<"n";
+					( orbiterPointer + orbiterNumber )->setObserver( 'n' );
+				}
+
 				gotoxy( 6 + ( wordSpace * 5 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
 				cout<<"Observer";
+				
+				if( observerSet )
+					_setColor( 2 );
 				
 				gotoxy( 6 + ( wordSpace * 6 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
 				cout<<"--Done--";
@@ -465,7 +480,7 @@ void _screen_new_exp( )										// function to setup a new experiment
 					gotoxy( 6 + ( wordSpace * 3 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
 					cout<<"Angular Velocity";
 					
-					highlighted++;				// highlight the next option
+					highlighted++;				// highlight the next option					
 					break;
 				}
 				
@@ -481,7 +496,13 @@ void _screen_new_exp( )										// function to setup a new experiment
 			case 4:							// if the fourth option was highlighted
 				if( control == TAB )		// if tab is pressed, highlight the next option
 				{
-					_setColor( 3 );
+					if( observerSet )
+					{
+						_setColor( 4 );
+					}
+					else
+						_setColor( 3 );
+					
 					gotoxy( 6 + ( wordSpace * 5 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
 					cout<<"Observer";
 				
@@ -509,7 +530,11 @@ void _screen_new_exp( )										// function to setup a new experiment
 					gotoxy( 6 + ( wordSpace * 6 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
 					cout<<"--Done--";
 				
-					_setColor( 2 );
+					if( observerSet )
+						_setColor( 4 );
+					else
+						_setColor( 2 );
+					
 					gotoxy( 6 + ( wordSpace * 5 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
 					cout<<"Observer";
 				
@@ -523,6 +548,10 @@ void _screen_new_exp( )										// function to setup a new experiment
 					gotoxy( 6 + ( wordSpace * highlighted ) + ( halfSpace - 8 ), ( 22 + ( orbiterNumber * 10)) );
 					cin>>chInput;
 					( orbiterPointer + orbiterNumber )->setObserver( chInput );
+					
+					if( chInput == 'y' )
+						observerSet = 1;
+					
 					break;
 				}
 			
@@ -542,10 +571,31 @@ void _screen_new_exp( )										// function to setup a new experiment
 				}
 				
 				else if( control == CR )	// else if enter is pressed, input values for the next orbiter
-				{
+				{					
 					_setColor( 4 );
 					gotoxy( 6 + ( wordSpace * 6 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
 					cout<<"--Done--";
+					
+					if( ( noOfOrbiters == ( orbiterNumber + 1 ) ) && ( !observerSet ) )
+					{
+						_setColor( 3 );
+						gotoxy( ((( screenSize.X - 14 ) / 2 ) - 35 ), ( screenSize.Y - 19 ) );
+						cout<<"You did not specify an observer. Please press Enter to set an observer.";
+						
+						do
+						{
+							control = _control_loop( );
+						
+							if( control == CR )
+							{
+								gotoxy( ((( screenSize.X - 14 ) / 2 ) - 25 ), ( screenSize.Y - 17 ) );
+								cout<<"Enter the orbiter number to set that as the observer :";
+								cin>>choice;
+								( orbiterPointer + choice )->setObserver( 'y' );
+							}
+						}while( control != CR );
+
+					}
 				
 					highlighted = 0;				// highlight the 0th option, i.e., for taking values for the next orbiter
 					orbiterNumber++;				// increment the orbiterNumber so that values values for the next orbiter can be taken
@@ -777,7 +827,7 @@ int _control_loop( )				// function with the main loop which is responsible for 
 					{
 						_setColor( 3 );
 						gotoxy( ((( screenSize.X - 14 ) / 2 ) - 17 ), ( screenSize.Y - 19 ) );
-						cout<<"                                    ";
+						cout<<"\t\t\t\t\t\t";
 						return 0;
 					}
 				}
@@ -794,7 +844,16 @@ int _control_loop( )				// function with the main loop which is responsible for 
 				
 			case HISTORY:
 				system( "start history.exe" );
-				
+				break;
+			
+			case HELP:
+				char command[25];
+				sprintf( command, "start retrograde_help.exe %d", CURRENT_SCREEN );
+				system( command );
+				break;
+			
+			case ABOUT:
+				system( "start about.exe" );
 				break;
 			
 			case TAB:		// Tab key
@@ -856,6 +915,7 @@ void _screen_run_exp( orbiter* orbiterPointer, int noOfOrbiters, double timePeri
 	int control;
 	int horizontalSpace = ( screenSize.X - ( 14 ) );		// total characters available inside the outline
 	
+	hideCursor( );
 	_setColor( 3 );
 	gotoxy( 6 + (( horizontalSpace / 2 ) - 15 ), (( screenSize.Y - 9 ) / 2 ) );
 	cout<<"Press Enter to run experiment";

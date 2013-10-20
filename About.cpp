@@ -30,13 +30,11 @@ COORD screenSize;
 void _setConsole( )				// sets the basic attributes of the console window
 {
 	HWND hWnd;
-	SetConsoleTitle( "Retrograde Motion - History" );						// set the console window's title
-	hWnd = FindWindow( NULL, "Retrograde Motion - History" );
+	SetConsoleTitle( "Retrograde Motion - About" );						// set the console window's title
+	hWnd = FindWindow( NULL, "Retrograde Motion - About" );
 	
 	HANDLE hOut = GetStdHandle( STD_OUTPUT_HANDLE );
 	screenSize = GetLargestConsoleWindowSize( hOut );			// get the largest available size for the console window
-	
-	screenSize.Y += 1000;
 	
 	SetConsoleScreenBufferSize( hOut, screenSize );				// set the console screen buffer size to the largest
 	
@@ -60,18 +58,16 @@ int main( )
 {
 	_setConsole( );
 	
-	int choice;
-	
 	char str[200];
 	
 	ifstream fileIn;
-	fileIn.open( "Saved_Experiments.txt" , ios :: in );
+	fileIn.open( "About.txt" , ios :: in );
 		
 	if( !fileIn )
 	{
 		cout<<endl;
 		space( 3, 5 );		
-		cout<<"No history exists."<<endl;
+		cout<<"No About exists."<<endl;
 		
 		space( 3, 6 );
 		cout<<"Press any key to exit.";
@@ -82,15 +78,6 @@ int main( )
 	
 	cout<<endl;
 	
-	space( 3 );	
-	cout<<"History"<<endl<<endl;
-	
-	space( 2 );	
-	cout<<"Delete History ( Ctrl + D )";
-	
-	space( 1 );	
-	cout<<"Exit ( ESC )"<<endl;
-	
 	while( fileIn.getline( str, 200, '\n' ) )
 	{
 		space( 1 );
@@ -98,18 +85,6 @@ int main( )
 	}
 	
 	fileIn.close( );
-	
-	choice = getch( );
-	
-	if( choice == 4 )
-	{
-		remove( "saved_experiments.txt" );
-		system( "cls" );
-		cout<<endl;
-	
-		space( 3, 10 );	
-		cout<<"History deleted. Press any key to exit."<<endl<<endl;
-	}
 	
 	getch( );
 	
