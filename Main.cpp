@@ -2,7 +2,7 @@
 	ID Description: 		Main for project - Retrograde Motion
 							Written by Pushpreet on 05/10/2013
 	
-	Version:				- 1.1.0
+	Version:				- 1.1.1
 
 	Features:				- contextual help
 	
@@ -988,7 +988,7 @@ void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod,
 	line reference( 0, 100 );
 	line passing;
 	double lastIntercept = 0.0;
-	char newDirection, lastDirection = 'x';
+	char newDirection, lastDirection = 'x', newSign, lastSign = 'x';
 	int loadDots = 0;
 	
 	ofstream fileOut;
@@ -1085,6 +1085,15 @@ void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod,
 		
 		intersection = reference.getIntersection( passing );
 		
+		if( intersection.x >= 0 )
+		{
+			newSign = 'p';
+		}
+		else
+		{
+			newSign = 'n';
+		}
+		
 		if( intersection.x > lastIntercept )
 		{
 			newDirection = 'p';
@@ -1104,6 +1113,16 @@ void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod,
 		
 		else if( newDirection != lastDirection )
 		{
+			if( lastSign == 'x' )
+			{
+				lastSign = newSign;
+			}			
+			else if( newSign != lastSign )
+			{
+				lastSign = newSign;
+				continue;
+			}
+			
 			fileOut<<endl<<"\t"<<"x :"<<setw( 27 )<<pointOne.x<<"x :"<<setw( 27 )<<pointTwo.x
 					<<endl<<"\t"<<"y :"<<setw( 27 )<<pointOne.y<<"y :"<<setw( 27 )<<pointTwo.y
 					<<setw( 30 )<<timeElapsed;
