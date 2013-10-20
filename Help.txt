@@ -1,4 +1,4 @@
-
+~0
 	*****************************************************************************************************************************************************************
 	*****************************************************************************************************************************************************************
 	*                                                                                                                                                               *
@@ -10,12 +10,124 @@
 	*                                                             Press ESC to go to the previous menu.                                                             *
 	*---------------------------------------------------------------------------------------------------------------------------------------------------------------*
 	*                                                                                                                                                               *
-	*                                                                 1. How to use the program                                                                     *
-	*                                                                 2. New Experiment                                                                             *
-	*                                                                 3. Save Experiment                                                                            *
-	*                                                                 4. View History                                                                               *
-	*                                                               ESC. Exit                                                                                       *
+	*                         Navigation :                                                                                                                          *
+	*                              To choose any of the menu items, press Ctrl + the first letter of the menu item.                                                 *
+	*                              That is, Ctrl + N for New Experiment                                                                                             *
+	*                                       Ctrl + S for Saving the experiment                                                                                      *
+	*                                       Ctrl + V for Viewing                                                                                                    *
+	*                                       Ctrl + H for Help                                                                                                       *
+	*                                       Ctrl + A for About                                                                                                      *
+	*                                       ESC      to  Exit                                                                                                       *
 	*                                                                                                                                                               *
 	*****************************************************************************************************************************************************************
 	*****************************************************************************************************************************************************************
 
+~1
+	*****************************************************************************************************************************************************************
+	*****************************************************************************************************************************************************************
+	*                                                                                                                                                               *
+	*                                                                         New Experiment                                                                        *
+	*                                                                                                                                                               *
+	*---------------------------------------------------------------------------------------------------------------------------------------------------------------*
+	*---------------------------------------------------------------------------------------------------------------------------------------------------------------*
+	*                                                                                                                                                               *
+	*                        Entering Values :                                                                                                                      *
+	*                              The current highlighted option is shown in red text, to change the corresponding option's value,                                 *
+	*                              press Enter and you would observe a cursor blinking under the option, this means that the program is                             *
+	*                              ready to accept values.                                                                                                          *
+	*                              After typing the desired value, press enter again to save it.                                                                    *
+	*                              Pressing tab will toggle through all the other avilable options.                                                                 *
+	*                                                                                                                                                               *
+	*                        Initial Position :                                                                                                                     *
+	*                              The Initial Position of the orbiter in radians. This is the position from which the orbiter will start its motion.               *
+	*                                                                                                                                                               *
+	*                        Orbit Radius :                                                                                                                         *
+	*                              Orbit Radius is the radius of the orbit of revolution around the centre.                                                         *
+	*                                                                                                                                                               *
+	*                        Angular Velocity :                                                                                                                     *
+	*                              The Abgular Velocity of revolution of the orbiter in radians.                                                                    *
+	*                                                                                                                                                               *
+	*                        Revolution Direction :                                                                                                                 *
+	*                              Revolution Direction specifies the direction of revoltion of the orbiter, can be either clockwise or anti-clockswise.            *
+	*                                                                                                                                                               *
+	*                        Observer :                                                                                                                             *
+	*                              Specifies if the orbiter would be the one observing or being observed.                                                           *
+	*                              There can only be one observer in an experiment.                                                                                 *
+	*                                                                                                                                                               *
+	*                        Units :                                                                                                                                *
+	*                              All the values have to be entered in SI units.                                                                                   *
+	*                              That is, Initial Position in radians                                                                                             *
+	*                                       Orbit Radius in metres                                                                                                  *
+	*                                       Angular Velocity in radians per second                                                                                  *
+	*                                       Revolution Direction, i.e., y for clockwise and n for anti-clockwise                                                    *
+	*                                       Observer, i.e., y if Observer and n if being observed                                                                   *
+	*                                                                                                                                                               *
+	*                        Constraints :                                                                                                                          *
+	*                              The total number of orbiters must be two or more, as a single body can't observe itself.                                         *
+	*                              There must one, and only one observer from all the orbiters.                                                                     *
+	*                                                                                                                                                               *
+	*****************************************************************************************************************************************************************
+	*****************************************************************************************************************************************************************
+
+~2
+	*****************************************************************************************************************************************************************
+	*****************************************************************************************************************************************************************
+	*                                                                                                                                                               *
+	*                                                                      Experiment Variables                                                                     *
+	*                                                                                                                                                               *
+	*---------------------------------------------------------------------------------------------------------------------------------------------------------------*
+	*---------------------------------------------------------------------------------------------------------------------------------------------------------------*
+	*                                                                                                                                                               *
+	*                        Entering Values :                                                                                                                      *
+	*                              The current highlighted option is shown in red text, to change the corresponding option's value,                                 *
+	*                              press Enter and you would observe a cursor blinking under the option, this means that the program is                             *
+	*                              ready to accept values.                                                                                                          *
+	*                              After typing the desired value, press enter again to save it.                                                                    *
+	*                              Pressing tab will toggle through all the other avilable options.                                                                 *
+	*                                                                                                                                                               *
+	*                        Time Period :                                                                                                                          *
+	*                              Time Period is the amount of time for which the experiment would run.                                                            *
+	*                              That is, the possible values can be,                                                                                             *
+	*                                       60       for one minute                                                                                                 *
+	*                                       3600     for one hour                                                                                                   *
+	*                                       86400    for a day                                                                                                      *
+	*                                       31560000 for an year                                                                                                    *
+	*                                                                                                                                                               *
+	*                        Time Interval :                                                                                                                        *
+	*                              Time Interval is the difference of time between the subsequent readings.                                                         *
+	*                              If it is 1, then a reading will be taken every one second.                                                                       *
+	*                              That is, the possible values can be,                                                                                             *
+	*                                       0.000001 for one micro-second                                                                                           *
+	*                                       0.001    for one milli-second                                                                                           *
+	*                                       1        for a second                                                                                                   *
+	*                                       60       for a minute                                                                                                   *
+	*                                                                                                                                                               *
+	*                        Units :                                                                                                                                *
+	*                              All the values have to be entered in SI units.                                                                                   *
+	*                              That is, Time Period in seconds                                                                                                  *
+	*                                       Time Interval in seconds                                                                                                *
+	*                                                                                                                                                               *
+	*                        Note :                                                                                                                                 *
+	*                              The smaller the Time Interval, the more precise would be the results, though the experiment would take                           *
+	*                              a longer time to run.                                                                                                            *
+	*                                                                                                                                                               *
+	*****************************************************************************************************************************************************************
+	*****************************************************************************************************************************************************************
+
+~3
+	*****************************************************************************************************************************************************************
+	*****************************************************************************************************************************************************************
+	*                                                                                                                                                               *
+	*                                                                           Run Experiment                                                                      *
+	*                                                                                                                                                               *
+	*---------------------------------------------------------------------------------------------------------------------------------------------------------------*
+	*---------------------------------------------------------------------------------------------------------------------------------------------------------------*
+	*                                                                                                                                                               *
+	*                        Only on this screen is the 'Save Experiment' option available.                                                                         *
+	*                        You can press Ctrl + S to Save the experiment in a text file titled "Saved_Experiments.txt".                                           *
+	*                                                                                                                                                               *
+	*                        Pressing Enter would start running the experiment, it cannot be interrupted.                                                           *
+	*                                                                                                                                                               *
+	*****************************************************************************************************************************************************************
+	*****************************************************************************************************************************************************************
+~

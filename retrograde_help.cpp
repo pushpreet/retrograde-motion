@@ -1,6 +1,6 @@
 /*
 	ID Description: 		Main for project - Retrograde Motion
-							Written by Pushpreet on 05/10/2013
+							Written by Pushpreet on 20/10/2013
 	
 	Version:				- 1.0.0
 
@@ -56,22 +56,22 @@ void space( int space = 1, int shift = 0 )
 	}
 	
 }
+
 int main( int argc, char* argv[] )
 {
 	_setConsole( );
-	
-	cout<<argv[1];
+		
 	int choice;
-	
+	bool write;
 	char str[200];
 	
 	ifstream fileIn;
-	fileIn.open( "help.txt" , ios :: in );
+	fileIn.open( "Help.txt" , ios :: in );
 		
 	if( !fileIn )
 	{
 		cout<<endl;
-		space( 3, 5 );		
+		space( 3, 5 );
 		cout<<"No help exists."<<endl;
 		
 		space( 3, 6 );
@@ -83,30 +83,34 @@ int main( int argc, char* argv[] )
 	
 	cout<<endl;
 	
-	space( 3 , -2 );	
+	space( 3 );	
 	cout<<"Help"<<endl<<endl;
 	
 	while( fileIn.getline( str, 200, '\n' ) )
 	{
-		space( 1 );
-		puts( str );
+		if( str[0] == '~' )
+		{
+			if( str[1] == *argv[1] )
+			{
+				write = true;
+				continue;
+			}
+			else
+			{
+				write = false;
+				continue;
+			}
+		}
+		
+		if( write )
+		{
+			space( 1 );
+			puts( str );
+		}
 	}
 	
 	fileIn.close( );
 	
-	choice = getch( );
-	
-	if( choice == 4 )
-	{
-		remove( "saved_experiments.txt" );
-		system( "cls" );
-		cout<<endl;
-	
-		space( 3, 10 );	
-		cout<<"History deleted. Press any key to exit."<<endl<<endl;
-	}
-	
 	getch( );
-	
 	return 0;
 }

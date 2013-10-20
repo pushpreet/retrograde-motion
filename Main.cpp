@@ -2,7 +2,7 @@
 	ID Description: 		Main for project - Retrograde Motion
 							Written by Pushpreet on 05/10/2013
 	
-	Version:				- 1.0.9
+	Version:				- 1.1.0
 
 	Features:				- contextual help
 	
@@ -356,7 +356,7 @@ void _screen_new_exp( )										// function to setup a new experiment
 	char chInput;											// variable to store the input from the keyboard as a character
 	int observerSet = 0;									// variable to keep track if the observer is set
 		
-	int horizontalSpace = ( screenSize.X - ( 14 ) );		// total characters available inside the outline
+	int horizontalSpace = ( screenSize.X - ( 10 ) );		// total characters available inside the outline
 	int wordSpace = horizontalSpace / 7;					// space for each variable item = total space / no of variables
 	int halfSpace = wordSpace / 2;
 	
@@ -385,22 +385,30 @@ void _screen_new_exp( )										// function to setup a new experiment
 		{
 			case 0:							// when no option is highlighted, prints all the options and highlights the first one
 				_setColor( 2 );				// grey color for option(s) that are not highlighted
-				gotoxy( 6 + ( wordSpace * 0 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
+				gotoxy( 6 + ( wordSpace * 0 ) + ( halfSpace - 7 ), ( 20 + ( orbiterNumber * 10)) );
 				cout<<"Orbiter "<<( orbiterNumber + 1 )<<" :";
 				
 				_setColor( 3 );				// red color for highlighted option(s)
-				gotoxy( 6 + ( wordSpace * 1 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
-				cout<<"Initial Position";
-				
+				gotoxy( 6 + ( wordSpace * 1 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
+				cout<<"Initial";
+				gotoxy( 6 + ( wordSpace * 1 ) + ( halfSpace - 3 ), ( 21 + ( orbiterNumber * 10)) );
+				cout<<"Position";
+								
 				_setColor( 2 );
-				gotoxy( 6 + ( wordSpace * 2 ) + ( halfSpace - 6 ), ( 20 + ( orbiterNumber * 10)) );
-				cout<<"Orbit Radius";
+				gotoxy( 6 + ( wordSpace * 2 ) + ( halfSpace - 2 ), ( 20 + ( orbiterNumber * 10)) );
+				cout<<"Orbit";
+				gotoxy( 6 + ( wordSpace * 2 ) + ( halfSpace - 2 ), ( 21 + ( orbiterNumber * 10)) );
+				cout<<"Radius";
 				
-				gotoxy( 6 + ( wordSpace * 3 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
-				cout<<"Angular Velocity";
+				gotoxy( 6 + ( wordSpace * 3 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
+				cout<<"Angular";
+				gotoxy( 6 + ( wordSpace * 3 ) + ( halfSpace - 3 ), ( 21 + ( orbiterNumber * 10)) );
+				cout<<"Velocity";
 				
-				gotoxy( 6 + ( wordSpace * 4 ) + ( halfSpace - 10 ), ( 20 + ( orbiterNumber * 10)) );
-				cout<<"Revolution Direction";
+				gotoxy( 6 + ( wordSpace * 4 ) + ( halfSpace - 5 ), ( 20 + ( orbiterNumber * 10)) );
+				cout<<"Revolution";
+				gotoxy( 6 + ( wordSpace * 4 ) + ( halfSpace - 4 ), ( 21 + ( orbiterNumber * 10)) );
+				cout<<"Direction";
 				
 				if( observerSet )
 				{
@@ -410,13 +418,13 @@ void _screen_new_exp( )										// function to setup a new experiment
 					( orbiterPointer + orbiterNumber )->setObserver( 'n' );
 				}
 
-				gotoxy( 6 + ( wordSpace * 5 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
+				gotoxy( 6 + ( wordSpace * 5 ) + ( halfSpace - 4 ), ( 20 + ( orbiterNumber * 10)) );
 				cout<<"Observer";
 				
 				if( observerSet )
 					_setColor( 2 );
 				
-				gotoxy( 6 + ( wordSpace * 6 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
+				gotoxy( 6 + ( wordSpace * 6 ) + ( halfSpace - 4 ), ( 20 + ( orbiterNumber * 10)) );
 				cout<<"--Done--";
 								
 				highlighted++;				// highlight the next option
@@ -426,12 +434,16 @@ void _screen_new_exp( )										// function to setup a new experiment
 				if( control == TAB )		// if tab is pressed, highlight the next option
 				{
 					_setColor( 3 );
-					gotoxy( 6 + ( wordSpace * 2 ) + ( halfSpace - 6 ), ( 20 + ( orbiterNumber * 10)) );
-					cout<<"Orbit Radius";
+					gotoxy( 6 + ( wordSpace * 2 ) + ( halfSpace - 2 ), ( 20 + ( orbiterNumber * 10)) );
+					cout<<"Orbit";
+					gotoxy( 6 + ( wordSpace * 2 ) + ( halfSpace - 2 ), ( 21 + ( orbiterNumber * 10)) );
+					cout<<"Radius";
 				
 					_setColor( 2 );
-					gotoxy( 6 + ( wordSpace * 1 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
-					cout<<"Initial Position";
+					gotoxy( 6 + ( wordSpace * 1 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
+					cout<<"Initial";
+					gotoxy( 6 + ( wordSpace * 1 ) + ( halfSpace - 3 ), ( 21 + ( orbiterNumber * 10)) );
+					cout<<"Position";
 					
 					highlighted++;				// highlight the next option
 					break;
@@ -440,7 +452,7 @@ void _screen_new_exp( )										// function to setup a new experiment
 				else if( control == CR )	// else if enter is pressed, input the value
 				{
 					_setColor( 4 );
-					gotoxy( 6 + ( wordSpace * highlighted ) + ( halfSpace - 8 ), ( 22 + ( orbiterNumber * 10)) );
+					gotoxy( 6 + ( wordSpace * highlighted ) + ( halfSpace - 3 ), ( 22 + ( orbiterNumber * 10)) );
 					cin>>input;
 					( orbiterPointer + orbiterNumber )->setInitialPosition( input );
 					break;
@@ -450,12 +462,16 @@ void _screen_new_exp( )										// function to setup a new experiment
 				if( control == TAB )		// if tab is pressed, highlight the next option
 				{
 					_setColor( 3 );
-					gotoxy( 6 + ( wordSpace * 3 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
-					cout<<"Angular Velocity";
+					gotoxy( 6 + ( wordSpace * 3 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
+					cout<<"Angular";
+					gotoxy( 6 + ( wordSpace * 3 ) + ( halfSpace - 3 ), ( 21 + ( orbiterNumber * 10)) );
+					cout<<"Velocity";
 				
 					_setColor( 2 );
-					gotoxy( 6 + ( wordSpace * 2 ) + ( halfSpace - 6 ), ( 20 + ( orbiterNumber * 10)) );
-					cout<<"Orbit Radius";
+					gotoxy( 6 + ( wordSpace * 2 ) + ( halfSpace - 2 ), ( 20 + ( orbiterNumber * 10)) );
+					cout<<"Orbit";
+					gotoxy( 6 + ( wordSpace * 2 ) + ( halfSpace - 2 ), ( 21 + ( orbiterNumber * 10)) );
+					cout<<"Radius";
 				
 					highlighted++;				// highlight the next option
 					break;
@@ -464,7 +480,7 @@ void _screen_new_exp( )										// function to setup a new experiment
 				else if( control == CR )	// else if enter is pressed, input the value
 				{
 					_setColor( 4 );
-					gotoxy( 6 + ( wordSpace * highlighted ) + ( halfSpace - 6 ), ( 22 + ( orbiterNumber * 10)) );
+					gotoxy( 6 + ( wordSpace * highlighted ) + ( halfSpace - 2 ), ( 22 + ( orbiterNumber * 10)) );
 					cin>>input;
 					( orbiterPointer + orbiterNumber )->setOrbitRadius( input );
 					break;
@@ -474,12 +490,16 @@ void _screen_new_exp( )										// function to setup a new experiment
 				if( control == TAB )		// if tab is pressed, highlight the next option
 				{
 					_setColor( 3 );
-					gotoxy( 6 + ( wordSpace * 4 ) + ( halfSpace - 10 ), ( 20 + ( orbiterNumber * 10)) );
-					cout<<"Revolution Direction";
+					gotoxy( 6 + ( wordSpace * 4 ) + ( halfSpace - 5 ), ( 20 + ( orbiterNumber * 10)) );
+					cout<<"Revolution";
+					gotoxy( 6 + ( wordSpace * 4 ) + ( halfSpace - 4 ), ( 21 + ( orbiterNumber * 10)) );
+					cout<<"Direction";
 				
 					_setColor( 2 );
-					gotoxy( 6 + ( wordSpace * 3 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
-					cout<<"Angular Velocity";
+					gotoxy( 6 + ( wordSpace * 3 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
+					cout<<"Angular";
+					gotoxy( 6 + ( wordSpace * 3 ) + ( halfSpace - 3 ), ( 21 + ( orbiterNumber * 10)) );
+					cout<<"Velocity";
 					
 					highlighted++;				// highlight the next option					
 					break;
@@ -488,7 +508,7 @@ void _screen_new_exp( )										// function to setup a new experiment
 				else if( control == CR )	// else if enter is pressed, input the value
 				{
 					_setColor( 4 );
-					gotoxy( 6 + ( wordSpace * highlighted ) + ( halfSpace - 8 ), ( 22 + ( orbiterNumber * 10)) );
+					gotoxy( 6 + ( wordSpace * highlighted ) + ( halfSpace - 3 ), ( 22 + ( orbiterNumber * 10)) );
 					cin>>input;
 					( orbiterPointer + orbiterNumber )->setVelocity( input, 'a' );
 					break;
@@ -504,12 +524,14 @@ void _screen_new_exp( )										// function to setup a new experiment
 					else
 						_setColor( 3 );
 					
-					gotoxy( 6 + ( wordSpace * 5 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
+					gotoxy( 6 + ( wordSpace * 5 ) + ( halfSpace - 4 ), ( 20 + ( orbiterNumber * 10)) );
 					cout<<"Observer";
 				
 					_setColor( 2 );
-					gotoxy( 6 + ( wordSpace * 4 ) + ( halfSpace - 10 ), ( 20 + ( orbiterNumber * 10)) );
-					cout<<"Revolution Direction";
+					gotoxy( 6 + ( wordSpace * 4 ) + ( halfSpace - 5 ), ( 20 + ( orbiterNumber * 10)) );
+					cout<<"Revolution";
+					gotoxy( 6 + ( wordSpace * 4 ) + ( halfSpace - 4 ), ( 21 + ( orbiterNumber * 10)) );
+					cout<<"Direction";
 				
 					highlighted++;				// highlight the next option
 					break;
@@ -518,7 +540,7 @@ void _screen_new_exp( )										// function to setup a new experiment
 				else if( control == CR )	// else if enter is pressed, input the value
 				{
 					_setColor( 4 );
-					gotoxy( 6 + ( wordSpace * highlighted ) + ( halfSpace - 10 ), ( 22 + ( orbiterNumber * 10)) );
+					gotoxy( 6 + ( wordSpace * highlighted ) + ( halfSpace - 5 ), ( 22 + ( orbiterNumber * 10)) );
 					cin>>chInput;
 					( orbiterPointer + orbiterNumber )->setRevolutionDirection( chInput );
 					break;
@@ -528,7 +550,7 @@ void _screen_new_exp( )										// function to setup a new experiment
 				if( control == TAB )		// if tab is pressed, highlight the next option
 				{
 					_setColor( 3 );
-					gotoxy( 6 + ( wordSpace * 6 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
+					gotoxy( 6 + ( wordSpace * 6 ) + ( halfSpace - 4 ), ( 20 + ( orbiterNumber * 10)) );
 					cout<<"--Done--";
 				
 					if( observerSet )
@@ -536,7 +558,7 @@ void _screen_new_exp( )										// function to setup a new experiment
 					else
 						_setColor( 2 );
 					
-					gotoxy( 6 + ( wordSpace * 5 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
+					gotoxy( 6 + ( wordSpace * 5 ) + ( halfSpace - 4 ), ( 20 + ( orbiterNumber * 10)) );
 					cout<<"Observer";
 				
 					highlighted++;				// highlight the next option
@@ -546,7 +568,7 @@ void _screen_new_exp( )										// function to setup a new experiment
 				else if( control == CR )	// else if enter is pressed, input the value
 				{
 					_setColor( 4 );
-					gotoxy( 6 + ( wordSpace * highlighted ) + ( halfSpace - 8 ), ( 22 + ( orbiterNumber * 10)) );
+					gotoxy( 6 + ( wordSpace * highlighted ) + ( halfSpace - 4 ), ( 22 + ( orbiterNumber * 10)) );
 					cin>>chInput;
 					( orbiterPointer + orbiterNumber )->setObserver( chInput );
 					
@@ -560,11 +582,13 @@ void _screen_new_exp( )										// function to setup a new experiment
 				if( control == TAB )		// if tab is pressed, highlight the next option
 				{
 					_setColor( 3 );
-					gotoxy( 6 + ( wordSpace * 1 ) + ( halfSpace - 8 ), ( 20 + ( orbiterNumber * 10)) );
-					cout<<"Initial Position";
+					gotoxy( 6 + ( wordSpace * 1 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
+					cout<<"Initial";
+					gotoxy( 6 + ( wordSpace * 1 ) + ( halfSpace - 3 ), ( 21 + ( orbiterNumber * 10)) );
+					cout<<"Position";
 					
 					_setColor( 2 );
-					gotoxy( 6 + ( wordSpace * 6 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
+					gotoxy( 6 + ( wordSpace * 6 ) + ( halfSpace - 4 ), ( 20 + ( orbiterNumber * 10)) );
 					cout<<"--Done--";
 				
 					highlighted = 1;				// highlight the first option
@@ -574,7 +598,7 @@ void _screen_new_exp( )										// function to setup a new experiment
 				else if( control == CR )	// else if enter is pressed, input values for the next orbiter
 				{					
 					_setColor( 4 );
-					gotoxy( 6 + ( wordSpace * 6 ) + ( halfSpace - 3 ), ( 20 + ( orbiterNumber * 10)) );
+					gotoxy( 6 + ( wordSpace * 6 ) + ( halfSpace - 4 ), ( 20 + ( orbiterNumber * 10)) );
 					cout<<"--Done--";
 					
 					if( ( noOfOrbiters == ( orbiterNumber + 1 ) ) && ( !observerSet ) )
