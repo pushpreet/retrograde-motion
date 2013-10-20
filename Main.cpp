@@ -2,7 +2,7 @@
 	ID Description: 		Main for project - Retrograde Motion
 							Written by Pushpreet on 05/10/2013
 	
-	Version:				- 1.0.0
+	Version:				- 1.0.9
 
 	Features:				- contextual help
 	
@@ -41,6 +41,7 @@
 // mapping for various key presses
 #define TAB 	9
 #define CR 		13
+#define ESC		27
 #define NEW		14
 #define SAVE 	19
 #define HISTORY	22
@@ -881,7 +882,7 @@ int _control_loop( )				// function with the main loop which is responsible for 
 				return NO;
 				break;
 			
-			case 27:		// ESC key
+			case ESC:		// ESC key
 				exit( 0 );
 				break;
 		}
@@ -890,7 +891,6 @@ int _control_loop( )				// function with the main loop which is responsible for 
 
 void _interface( )
 {
-	_setConsole( );
 	_paintScreen( );
 	
 	_setColor( 3 );
@@ -1027,6 +1027,9 @@ void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod,
 	
 	for( double timeElapsed = 0 ; timeElapsed < timePeriod ; timeElapsed += timeInterval )
 	{
+		if( !timeElapsed )
+			continue;
+		
 		_setColor( 3 );
 		gotoxy( 6 + (( horizontalSpace / 2 ) ), (( screenSize.Y - 9 ) / 2 ) );
 		
@@ -1096,10 +1099,16 @@ void calculateTime( orbiter* orbiterOne, orbiter* orbiterTwo, double timePeriod,
 			<<endl;
 	
 	fileOut.close( );
+	
+	_control_loop( );
+	CURRENT_SCREEN = SCREEN_WELCOME;
+	_interface( );
 }
 
 int main( )
 {
+	_setConsole( );
+	
 	hideCursor( );
 
 	_interface( );
